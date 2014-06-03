@@ -1,0 +1,263 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/angular.min.js"></script>
+    <script src="scripts/classReview.js"></script>
+  
+<style>
+
+#settingsPanel {
+    position: relative;
+    background-color: #eee;
+    width:740px;
+    height: 400px;
+    margin: 10px auto;
+    padding: 10px;
+}
+#settingsPanel input[type="checkbox"] {
+    margin-bottom: 6px;
+}
+.settingsTitle {
+    color:blue;
+    width:100px;
+    display:inline-block;
+    vertical-align:top;
+}
+.lineItem {
+
+    margin-top:10px;
+}
+input[type="radio"] {
+    width:20px;
+    height:20px;
+    position:relative;
+    top:-5px;
+    padding:0px;
+}
+input[type="checkbox"] {
+    width:20px;
+    height:20px;
+    padding:0px;
+}
+
+#pageWrapper {
+    position:relative;
+    width:800px;
+    margin:0px auto;
+    background-color:#ccc;
+}
+
+#globalHeaderBar {
+    position: relative;
+    background-color: #333;
+    height: 60px;
+    width: 800px;
+    box-shadow:0px 1px 3px rgba(0,0,0,0.5);
+    color: white;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+#pagePanel {
+    position: relative;
+    background-color: #eee;
+    width:740px;
+    margin: 10px auto;
+    padding: 10px;
+}
+
+p {
+    font-family:arial;
+}
+
+.viewButton {
+    background:transparent;
+    border:0px;
+}
+
+.buttonLabel {
+    font-size:12px;
+    font-weight:bold;
+    position:absolute;
+}
+
+
+.reviewWidget {
+    position:absolute;
+    right:20px;
+    top:10px;
+    font-size:19px;
+    vertical-align:top;
+}
+
+input {
+
+    width:20px;
+    height:20px;
+    margin-left:15px;
+}
+
+td {
+    background:white;
+    font-family:arial;
+    font-weight:normal;
+    text-align:center;
+}
+
+th {
+    background:#ccc;
+}
+table {
+    margin-top:5px;
+    border-spacing:4px;
+    border-collapse:separate;
+    font-size:16px;
+}
+
+select {
+
+    font-size:16px;
+    border:1px solid;
+    height:27px;
+}
+
+#analysisButton {
+
+    color:white;
+    height:30px;
+    width:100px;
+    background:#333;
+    margin-top:-10px;
+}
+
+.overall {
+
+    background:#ddd;
+    font-weight:bold;
+}
+
+#workReview {
+    height:30px;
+    background:#333;
+    color:white;
+    font-size:16px;
+
+}
+
+</style>
+
+</head>
+  <body ng-app="simsClassReview">
+  <div id="root" ng-controller="ClassReviewCtrl">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <!--[if lt IE 9]>
+      <script src="bower_components/es5-shim/es5-shim.js"></script>
+      <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+    <div id="pageWrapper" style="height:650px">
+        <div id="globalHeaderBar">
+            <h1 style="font-size:21px;left: 7px; top:15px;position:absolute">{{assignmentTitle}}</h1>
+            <img src="img/pearson_logo.gif" width="92" height="27" style="position:absolute;right:10px;top:17px;">
+        </div>
+
+        <div id="pagePanel" ng-if="currentView=='class'" style="height:550px">
+            <h2 style="margin-left:10px">Class Item Analysis</h2>
+            <div class="reviewWidget"> 
+                <h3 style="display:inline;position:relative;top:-10px;font-size:18px;">Review:</h3>
+                <div style="display:inline-block"> 
+                    <button id="classButton" class="viewButton" ng-click="setView('class')"><img src="img/review-icon_class_active.png" /></button>
+                    <label class="buttonLabel" for="classButton" style="left:75px;top:40px">CLASS</label>
+                </div>
+                <div style="display:inline-block">
+                    <button class="viewButton" ng-click="setView('student')"><img src="img/review-icon_class_inactive.png" /></button>
+                    <label class="buttonLabel" for="classButton" style="left:125px;top:40px">STUDENT</label>
+                </div>
+            </div>
+            <div style="margin-top:25px">
+                <table>
+                    <thead>
+                        <th style="width:200px">&nbsp;</th>
+                        <th style="width:250px">Best Attempt</th>
+                        <th style="width:150px">All Attempts</th>
+                    </thead>
+                    <tr>
+                        <td>Average Score</td>
+                        <td>{{classData.avgBestScore.toFixed(2)}}</td>
+                        <td>{{classData.avgScore.toFixed(2)}}</td>
+                    </tr>
+                    <tr>
+                        <td>Average Time Spent (min)</td>
+                        <td>{{classData.avgBestDuration.toFixed(1)}}</td>
+                        <td>{{classData.avgDuration.toFixed(1)}}</td>
+                    </tr>
+                    <tr>
+                        <td>Average # of Attempts</td>
+                        <td>N/A</td>
+                        <td>{{classData.avgAttempts.toFixed(1)}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="pagePanel" ng-if="currentView=='student'" style="height:550px">
+            <h2>Student Item Analysis</h2>
+            <div class="reviewWidget"> 
+                <h3 style="display:inline;position:relative;top:-10px;font-size:18px;">Review:</h3>
+                <div style="display:inline-block"> 
+                    <button id="classButton" class="viewButton" ng-click="setView('class')"><img src="img/review-icon_class_inactive.png" /></button>
+                    <label class="buttonLabel" for="classButton" style="left:75px;top:40px">CLASS</label>
+                </div>
+                <div style="display:inline-block">
+                    <button class="viewButton" ng-click="setView('student')"><img src="img/review-icon_class_active.png" /></button>
+                    <label class="buttonLabel" for="classButton" style="left:125px;top:40px">STUDENT</label>
+                </div>
+            </div>
+            <div style="margin-top:25px" ng-if="role=='instructor'">
+                <select ng-model="studentData.currentSelection" ng-options="s.name for s in students">
+                </select>
+                <button id="analysisButton" ng-click="selectStudent()">See Analysis</button>
+            </div>
+            <p style="margin-left:5px;font-weight:bold;font-size:16px">{{studentData.data.name}}</p>
+           <div style="margin-top:25px">
+                <table>
+                    <thead>
+                        <th style="width:200px">Attempt</th>
+                        <th style="width:250px">Time Spent (min)</th>
+                        <th style="width:150px">Score</th>
+                    </thead>
+                    <tr ng-repeat="a in studentData.data.attempts">
+                        <td>Attempt {{$index + 1}}</td>
+                        <td>{{a.duration.toFixed(1)}}</td>
+                        <td>{{a.score.toFixed(2)}}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Total:</td>
+                        <td>{{studentData.data.totalDuration}}</td>
+                    </tr>
+
+                </table>
+            </div>  
+        </div>
+    </div>
+  </div>
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <script>
+      var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+      (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+      g.src='//www.google-analytics.com/ga.js';
+      s.parentNode.insertBefore(g,s)}(document,'script'));
+    </script>
+</div>
+</body>
+</html>
